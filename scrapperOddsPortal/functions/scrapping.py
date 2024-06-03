@@ -297,11 +297,11 @@ def scrape_books_details(filename, file_to_write):
       writer = csv.writer(csvfile)
       writer.writerow(l)
 
-region = 'europe'
-competitions = 'euro-2024'
-urls = scrape_ids(region, competitions, 4, 5, teams_available)
-# print(scrape_odds_from_url_handicap(urls[0]))
-file_urls = save_list_to_txt_join(urls, 'urls_europe_2024')
+# region = 'europe'
+# competitions = 'euro-2024'
+# urls = scrape_ids(region, competitions, 4, 5, teams_available)
+# # print(scrape_odds_from_url_handicap(urls[0]))
+# file_urls = save_list_to_txt_join(urls, 'urls_europe_2024')
 # print(len(urls))
 # result = scrape_books_details('urls_world_2014', "odds_data_worlds_2014.csv")
 # urls2 = scrape_ids('euro-2016', 7)
