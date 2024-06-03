@@ -1,6 +1,6 @@
 import pandas as pd
 
-csvs = ["odds_data_europe_2020.csv", "odds_data_europe_2016.csv", "odds_data_worlds_2022.csv", "odds_data_worlds_2018.csv", "odds_data_worlds_2014.csv", "odds_data_friendly.csv"]
+csvs = ["odds_data_europe_2024.csv", "odds_data_europe_2020.csv", "odds_data_europe_2016.csv", "odds_data_worlds_2022.csv", "odds_data_worlds_2018.csv", "odds_data_worlds_2014.csv", "odds_data_friendly.csv"]
 def union_csv(list_of_csvs):
   # Read the CSV files into DataFrames
   df_output = None
