@@ -1,4 +1,3 @@
-import os
 import threading
 from math import nan
 from multiprocessing.pool import ThreadPool
@@ -10,6 +9,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import re
+import itertools
+import csv
 
 class Driver:
   def __init__(self):
@@ -58,8 +59,8 @@ def scrape_odds_from_url_1x2(url):
   time.sleep(3)
   soup = bs(browser.page_source, "lxml")
   average_row = soup.find("div", class_="border-black-borders bg-gray-light flex h-9 border-b border-l border-r text-xs")
-  if len(average_row) == 0:
-    return None
+  if average_row is None:
+    return [None, None, None]
   for value_element in average_row.find_all("div", class_="text-black-main"):
     output.append(value_element.find("p").text.strip())
   return output[0:3]
@@ -73,25 +74,33 @@ def scrape_odds_from_url_OU(url):
   time.sleep(3)
   soup = bs(browser.page_source, "lxml")
   elements = soup.find_all("div", class_="border-black-borders hover:bg-gray-light flex h-9 cursor-pointer border-b border-l border-r text-xs")
-  if len(elements) == 0:
-    return None
+  output_list = [[None, None, None, None, None], [None, None, None, None, None]]
+  if elements is None or elements == "":
+    return output_list
 
   # Process each element
   for element in elements:
     # Extract text (assuming it's in the first paragraph with class not containing "breadcrumbs-m")
     text = element.find("p", class_=lambda c: c and not c.startswith("breadcrumbs-m")).text.strip()
-    if text in ['Over/Under +0.5', 'Over/Under +1.5', 'Over/Under +2.5', 'Over/Under +3.5', 'Over/Under +4.5', 'Over/Under +5.5', 'Over/Under +6.5']:
+    if text in ['Over/Under +0.5', 'Over/Under +1.5', 'Over/Under +2.5', 'Over/Under +3.5', 'Over/Under +4.5']:
 
       # Extract values (assuming they are within elements with class "height-content")
       values = []
-      for value_element in element.find_all("div", class_="flex-center border-black-borders min-w-[60px] flex-col gap-1 pb-0.5 pt-0.5 relative"):
+      for i, value_element in enumerate(element.find_all("div", class_="flex-center border-black-borders min-w-[60px] flex-col gap-1 pb-0.5 pt-0.5 relative")):
         value_p = value_element.find("p", class_="height-content")
-        values.append(text)
-        values.append(value_p.text.strip())
-      output.append(values)
+        if text == 'Over/Under +0.5':
+          output_list[i][0] = value_p.text.strip()
+        elif text == 'Over/Under +1.5':
+          output_list[i][1] = value_p.text.strip()
+        elif text == 'Over/Under +2.5':
+          output_list[i][2] = value_p.text.strip()
+        elif text == 'Over/Under +3.5':
+          output_list[i][3] = value_p.text.strip()
+        elif text == 'Over/Under +4.5':
+          output_list[i][4] = value_p.text.strip()
     else:
       pass
-  return output
+  return output_list
 
 def scrape_odds_from_url_handicap(url):
   output = []
@@ -102,25 +111,31 @@ def scrape_odds_from_url_handicap(url):
   time.sleep(3)
   soup = bs(browser.page_source, "lxml")
   elements = soup.find_all("div", class_="border-black-borders hover:bg-gray-light flex h-9 cursor-pointer border-b border-l border-r text-xs")
-  if len(elements) == 0:
-    return None
+  output_list = [[None, None, None, None], [None, None, None, None], [None, None, None, None]]
+  if elements is None or elements == "":
+    return output_list
 
   # Process each element
   for element in elements:
     # Extract text (assuming it's in the first paragraph with class not containing "breadcrumbs-m")
     text = element.find("p", class_=lambda c: c and not c.startswith("breadcrumbs-m")).text.strip()
-    if text in ['European Handicap -3','European Handicap -2','European Handicap -1','European Handicap +1','European Handicap +2', 'European Handicap +3',]:
+    if text in ['European Handicap -2','European Handicap -1','European Handicap +1','European Handicap +2']:
 
       # Extract values (assuming they are within elements with class "height-content")
       values = []
-      for value_element in element.find_all("div", class_="flex-center border-black-borders min-w-[60px] flex-col gap-1 pb-0.5 pt-0.5 relative"):
+      for i, value_element in enumerate(element.find_all("div", class_="flex-center border-black-borders min-w-[60px] flex-col gap-1 pb-0.5 pt-0.5 relative")):
         value_p = value_element.find("p", class_="height-content")
-        values.append(text)
-        values.append(value_p.text.strip())
-      output.append(values)
+        if text == 'European Handicap -2':
+          output_list[i][0] = value_p.text.strip()
+        elif text == 'European Handicap -1':
+          output_list[i][1] = value_p.text.strip()
+        elif text == 'European Handicap +1':
+          output_list[i][2] = value_p.text.strip()
+        elif text == 'European Handicap +2':
+          output_list[i][3] = value_p.text.strip()
     else:
       pass
-  return output
+  return output_list
 
 def scrape_odds_from_url_bts(url):
   output = []
@@ -131,8 +146,8 @@ def scrape_odds_from_url_bts(url):
   time.sleep(3)
   soup = bs(browser.page_source, "lxml")
   average_row = soup.find("div", class_="border-black-borders bg-gray-light flex h-9 border-b border-l border-r text-xs")
-  if len(average_row) == 0:
-    return None
+  if average_row is None or average_row == "":
+    return [None, None]
   for value_element in average_row.find_all("div", class_="text-black-main"):
     output.append(value_element.find("p").text.strip())
   return output[0:2]
@@ -188,24 +203,31 @@ def scrape_ids(region, competition, numPage1, numPage2, teams):
   return urls
 
 def scrape_dates(url):
-  url = url + '#bts;2'
+  url = url + '#1X2;2'
   browser.get(url)
-  print(browser.current_url)
   browser.refresh()
   browser.execute_script("window.scrollTo(0, 3000);")
   time.sleep(3)
   soup = bs(browser.page_source, "lxml")
   container = soup.find('div', class_="text-gray-dark font-main item-center flex gap-1 text-xs font-normal")
-  output = [p.text.strip() for p in container.find_all('p')]
-  return output[1][:-1] 
+  if container is None or container =="":
+    return None
+  else:
+    output = [p.text.strip() for p in container.find_all('p')]
+    return output[1][:-1] 
 
+def extract_info_from_url(url):
+  """
+  Extracts the last three values (assuming team names and match ID) from a URL.
 
-# def scrape_books_details(urls):
-#   for url in urls:
-#     date = scrape_dates(url)
-#     odds_1x2 = scrape_odds_from_url_1x2(url)
-#     odds_OU = scrape_odds_from_url_OU(url)
-#     odds_bts = scrape_odds_from_url_bts(url)
+  Args:
+      url: The URL string containing team names and a match ID.
+
+  Returns:
+      A tuple containing three strings: team1, team2, and match_id.
+  """
+  parts = url.split("/")
+  return ([parts[-2]])
 
 teams_available = ['Albania',
 'Austria',
@@ -237,23 +259,58 @@ teams_available = ['Albania',
 'North Macedonia',
 'Sweden'
 ]
-region = 'world'
-competitions = 'friendly-international-2019'
-# urls = scrape_ids(region, competitions, 6, 10, teams_available)
+
+def read_urls_from_file(filename):
+  """
+  Reads URLs from a text file and returns a list of strings.
+
+  Args:
+      filename: The path to the text file containing URLs.
+
+  Returns:
+      A list of strings where each element is a URL from the file.
+  """
+  urls = []
+  with open(filename, "r") as file:
+    for line in file:
+      # Remove trailing newline character if present
+      url = line.strip()
+      urls.append(url)
+  return urls
+
+def scrape_books_details(filename, file_to_write):
+  urls = read_urls_from_file(filename)
+  output_list = []
+  for i, url in enumerate(urls):
+    url_details = extract_info_from_url(url)
+    date = [scrape_dates(url)]
+    odds_1x2 = scrape_odds_from_url_1x2(url)
+    odds_OU = list(itertools.chain.from_iterable(scrape_odds_from_url_OU(url)))
+    odds_bts = scrape_odds_from_url_bts(url)
+    odds_handi = list(itertools.chain.from_iterable(scrape_odds_from_url_handicap(url)))
+    flist = [url_details, date, odds_1x2, odds_bts, odds_OU, odds_handi]
+    output_list.append(list(itertools.chain.from_iterable((flist))))
+    if i% 10 == 0 and i != 0:
+      print(i)
+  with open(file_to_write, "a", newline="") as csvfile:
+    for l in output_list:
+      writer = csv.writer(csvfile)
+      writer.writerow(l)
+
+# region = 'europe'
+# competitions = 'euro-2024'
+# urls = scrape_ids(region, competitions, 1, 1, teams_available)
+# print(scrape_odds_from_url_handicap(urls[0]))
 # file_urls = save_list_to_txt_join(urls, 'urls_friendly')
 # print(len(urls))
-
-test_url = scrape_ids(region, competitions, 1, 2, teams_available)[0]
-test_date = scrape_dates(test_url)
-test_1x2 = scrape_odds_from_url_1x2(test_url)
-test_OU = scrape_odds_from_url_OU(test_url)
-test_bts = scrape_odds_from_url_bts(test_url)
-test_handi = scrape_odds_from_url_handicap(test_url)
-print(test_date, test_1x2, test_OU, test_bts, test_handi)
+result = scrape_books_details('urls_world_2014', "odds_data_worlds_2014.csv")
 # urls2 = scrape_ids('euro-2016', 7)
 # print(len(urls2))
 # file_urls = save_list_to_txt_join(urls2, 'urls-europe')
 
 # out = scrape_odds_from_url_bts(urls[0:2])
 # print(out)
+
+# test = read_urls_from_file('odds_data_europe_2020.csv')
+# print(test)
 browser.quit()
