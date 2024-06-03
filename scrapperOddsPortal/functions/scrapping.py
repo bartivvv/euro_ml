@@ -198,8 +198,8 @@ def scrape_ids(region, competition, numPage1, numPage2, teams):
         for participant in participant_elements:
             team_names.append(participant.text.strip())
         # country_names.append(team_names)
-        if (team_names[0] in teams) or (team_names[1] in teams):
-          urls.append(f"https://www.oddsportal.com/football/{region}/{competition}/{clean_team_name(team_names[0])}-{clean_team_name(team_names[1])}-{row_id}/")
+        # if (team_names[0] in teams) or (team_names[1] in teams):
+        urls.append(f"https://www.oddsportal.com/football/{region}/{competition}/{clean_team_name(team_names[0])}-{clean_team_name(team_names[1])}-{row_id}/")
   return urls
 
 def scrape_dates(url):
@@ -297,13 +297,13 @@ def scrape_books_details(filename, file_to_write):
       writer = csv.writer(csvfile)
       writer.writerow(l)
 
-# region = 'europe'
-# competitions = 'euro-2024'
-# urls = scrape_ids(region, competitions, 1, 1, teams_available)
+region = 'europe'
+competitions = 'euro-2024'
+urls = scrape_ids(region, competitions, 4, 5, teams_available)
 # print(scrape_odds_from_url_handicap(urls[0]))
-# file_urls = save_list_to_txt_join(urls, 'urls_friendly')
+file_urls = save_list_to_txt_join(urls, 'urls_europe_2024')
 # print(len(urls))
-result = scrape_books_details('urls_world_2014', "odds_data_worlds_2014.csv")
+# result = scrape_books_details('urls_world_2014', "odds_data_worlds_2014.csv")
 # urls2 = scrape_ids('euro-2016', 7)
 # print(len(urls2))
 # file_urls = save_list_to_txt_join(urls2, 'urls-europe')
