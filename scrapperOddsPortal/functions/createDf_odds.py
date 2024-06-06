@@ -32,7 +32,7 @@ headers = [
     "HandiCap_plus2_L",
 ]
 
-with open("odds_data_europe_2024.csv", "a", newline="") as csvfile:
+with open("odds_data_africa_2017.csv", "a", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(headers)
     
