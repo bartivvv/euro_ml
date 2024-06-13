@@ -78,13 +78,10 @@ def scrape_odds_from_url_OU(url):
   if elements is None or elements == "":
     return output_list
 
-  # Process each element
   for element in elements:
-    # Extract text (assuming it's in the first paragraph with class not containing "breadcrumbs-m")
     text = element.find("p", class_=lambda c: c and not c.startswith("breadcrumbs-m")).text.strip()
     if text in ['Over/Under +0.5', 'Over/Under +1.5', 'Over/Under +2.5', 'Over/Under +3.5', 'Over/Under +4.5']:
 
-      # Extract values (assuming they are within elements with class "height-content")
       values = []
       for i, value_element in enumerate(element.find_all("div", class_="flex-center border-black-borders min-w-[60px] flex-col gap-1 pb-0.5 pt-0.5 relative")):
         value_p = value_element.find("p", class_="height-content")
@@ -117,11 +114,9 @@ def scrape_odds_from_url_handicap(url):
 
   # Process each element
   for element in elements:
-    # Extract text (assuming it's in the first paragraph with class not containing "breadcrumbs-m")
     text = element.find("p", class_=lambda c: c and not c.startswith("breadcrumbs-m")).text.strip()
     if text in ['European Handicap -2','European Handicap -1','European Handicap +1','European Handicap +2']:
 
-      # Extract values (assuming they are within elements with class "height-content")
       values = []
       for i, value_element in enumerate(element.find_all("div", class_="flex-center border-black-borders min-w-[60px] flex-col gap-1 pb-0.5 pt-0.5 relative")):
         value_p = value_element.find("p", class_="height-content")
@@ -154,13 +149,6 @@ def scrape_odds_from_url_bts(url):
 
 
 def save_list_to_txt_join(data, filename, mode='a'):
-  """Saves a list of elements to a text file, joining them with a newline character.
-
-  Args:
-      data: The list of elements to save.
-      filename: The name of the text file to write to.
-      mode: The file open mode ('a' for appending, defaults to 'w' for writing).
-  """
   with open(filename, mode) as f:
     f.write('\n'.join(str(item) for item in data) + '\n') 
 
@@ -171,6 +159,7 @@ def scrape_ids(region, competition, numPage1, numPage2, teams):
   for i in range(numPage1, numPage2+1):
     base_url = f"https://www.oddsportal.com/football/{region}/{competition}/results/#/page/"
     url = base_url + f"{i}/"
+    # url = base_url
 
     browser.get(url)
     print(browser.current_url)
@@ -191,14 +180,13 @@ def scrape_ids(region, competition, numPage1, numPage2, teams):
       # if row_id:
       #   all_ids.append(row_id)
       participant_info = row.find("div", class_="group flex")
-      if participant_info:  # Check if participant information exists
-      # Find all elements with participant names within participant_info
+      if participant_info:  # Check if participant information exist
         participant_elements = participant_info.select(".participant-name.truncate")
         team_names = []
         for participant in participant_elements:
             team_names.append(participant.text.strip())
         # country_names.append(team_names)
-        if (team_names[0] not in teams) and (team_names[1] not in teams):
+        if (team_names[0] in teams) or (team_names[1] in teams):
           urls.append(f"https://www.oddsportal.com/football/{region}/{competition}/{clean_team_name(team_names[0])}-{clean_team_name(team_names[1])}-{row_id}/")
   return urls
 
@@ -273,7 +261,6 @@ def read_urls_from_file(filename):
   urls = []
   with open(filename, "r") as file:
     for line in file:
-      # Remove trailing newline character if present
       url = line.strip()
       urls.append(url)
   return urls
@@ -297,13 +284,13 @@ def scrape_books_details(filename, file_to_write):
       writer = csv.writer(csvfile)
       writer.writerow(l)
 
-# region = 'world'
-# competitions = 'world-cup-2014'
-# urls = scrape_ids(region, competitions, 6, 10, teams_available)
+region = 'world'
+competitions = 'friendly-international'
+urls = scrape_ids(region, competitions, 1, 1, teams_available)
 # # print(scrape_odds_from_url_handicap(urls[0]))
-# file_urls = save_list_to_txt_join(urls, 'urls_world_missing')
+file_urls = save_list_to_txt_join(urls, 'urls_recent_friendly')
 # print(len(urls))
-result = scrape_books_details('urls_africa_2017', "odds_data_africa_2017.csv")
+# result = scrape_books_details('urls_euro_group_stage', "odds_data_euro_group_stage.csv")
 # urls2 = scrape_ids('euro-2016', 7)
 # print(len(urls2))
 # file_urls = save_list_to_txt_join(urls2, 'urls-europe')
