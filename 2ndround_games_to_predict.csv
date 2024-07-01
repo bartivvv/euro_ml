@@ -1,9 +1,0 @@
-date,home_team,away_team,home_score,away_score,tournament,city,country,neutral
-2024-06-29,Switzerland,Italy,NA,NA,UEFA Euro,Munich,Germany,TRUE
-2024-06-29,Germany,Denmark,NA,NA,UEFA Euro,Cologne,Germany,FALSE
-2024-06-30,England,Slovakia,NA,NA,UEFA Euro,Berlin,Germany,TRUE
-2024-06-30,Spain,Georgia,NA,NA,UEFA Euro,Dortmund,Germany,TRUE
-2024-07-01,France,Belgium,NA,NA,UEFA Euro,Stuttgart,Germany,TRUE
-2024-07-01,Portugal,Slovenia,NA,NA,UEFA Euro,Gelsenkirchen,Germany,TRUE
-2024-07-02,Romania,Netherlands,NA,NA,UEFA Euro,Hamburg,Germany,TRUE
-2024-07-02,Austria,Turkey,NA,NA,UEFA Euro,Düsseldorf,Germany,TRUE
