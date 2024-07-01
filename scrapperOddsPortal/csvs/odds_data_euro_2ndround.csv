@@ -1,4 +1,5 @@
-,29 Cze 2024,3.22,2.85,2.59,2.07,1.73,1.12,1.50,2.60,4.93,10.38,6.54,2.56,1.50,1.18,1.05,22.75,7.65,1.52,1.15,9.25,4.70,4.10,7.50,1.09,1.36,5.55,15.00
+HomeTeam_AwayTeam_Match_ID,Date,HomeTeamWinOdd,HomeTeamDrawOdd,HomeTeamLoseOdd,BtsYes,BtsNo,Over_05,Over_15,Over_25,Over_35,Over_45,Under_05,Under_15,Under_25,Under_35,Under_45,HandiCap_min2_W,HandiCap_min1_W,HandiCap_plus1_W,HandiCap_plus2_W,HandiCap_min2_D,HandiCap_min1_D,HandiCap_plus1_D,HandiCap_plus2_D,HandiCap_min2_L,HandiCap_min1_L,HandiCap_plus1_L,HandiCap_plus2_L
+switzerland-italy-p0tqX2qH,29 Jun 2024,3.22,2.85,2.59,2.07,1.73,1.12,1.50,2.60,4.93,10.38,6.54,2.56,1.50,1.18,1.05,22.75,7.65,1.52,1.15,9.25,4.70,4.10,7.50,1.09,1.36,5.55,15.00
 germany-denmark-UmziYSZ0,29 Jun 2024,1.63,3.83,5.74,1.90,1.87,1.05,1.28,1.89,3.18,6.19,10.66,3.66,1.91,1.36,1.13,5.40,2.69,1.15,1.03,4.80,3.70,6.98,14.25,1.46,2.24,14.50,45.00
 england-slovakia-QZ9sqLro,30 Jun 2024,1.44,4.20,8.80,2.42,1.54,1.08,1.37,2.14,3.86,7.70,8.71,3.07,1.71,1.26,1.09,4.30,2.24,1.08,1.01,4.22,3.50,9.20,21.25,1.63,2.82,29.00,105.00
 spain-georgia-YyV2j3jB,30 Jun 2024,1.20,6.81,14.80,2.43,1.54,1.02,1.20,1.62,2.55,4.49,16.25,4.58,2.30,1.52,1.20,2.60,1.62,1.04,-,3.90,4.03,12.25,-,2.26,4.47,41.00,-
